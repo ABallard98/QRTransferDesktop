@@ -55,7 +55,7 @@ public class MainController {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Open Resource File");
 
-            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.jpeg", "*.png");
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Available Files", "*.jpg", "*.jpeg", "*.png", "*.pdf");
             fileChooser.getExtensionFilters().add(extFilter);
 
             File selectedFile = fileChooser.showOpenDialog(new Stage());
