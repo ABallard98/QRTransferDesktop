@@ -1,3 +1,4 @@
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -6,7 +7,9 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 public class MainController {
 
@@ -25,7 +28,6 @@ public class MainController {
     private File fileToTransfer;
 
     public void initialize(){
-        deletePreviouslyMadeQr();
         transferFileButton.setText("Transfer file");
         selectFileButton.setText("Select file :D");
 
@@ -49,28 +51,35 @@ public class MainController {
 
     private File selectFile(){
         try{
-            deletePreviouslyMadeQr();
+            //set existing QR code to null
             qrImageView.setImage(null);
 
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Open Resource File");
+            fileChooser.setTitle("Open File To Transfer");
 
+            //file extension filter - jpg, jpeg, png, pdf
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Available Files", "*.jpg", "*.jpeg", "*.png", "*.pdf");
             fileChooser.getExtensionFilters().add(extFilter);
 
             File selectedFile = fileChooser.showOpenDialog(new Stage());
             if(selectedFile != null){
-                this.fileToTransfer = selectedFile;
+
+                this.fileToTransfer = selectedFile; //chosen file to transfer
 
                 //generated QR code for chosen file
-                qrCodeTextArea.setText(GenerateQRCode.generateQRCode(fileToTransfer));
+                String qrText = GenerateQRCode.generateQRCode(fileToTransfer);
+                qrCodeTextArea.setText(qrText);
 
-                Thread.sleep(1000); //wait a bit for QR code to be generated
 
                 //load QR code
-                Image qrCodeImage = new Image("generatedQRCodes\\"+fileToTransfer.getName());
-                qrImageView.setImage(qrCodeImage);
-
+                try{
+                    BufferedImage newQRCode = GenerateQRCode.createQRImage(fileToTransfer);
+                    Image image = SwingFXUtils.toFXImage(newQRCode, null);
+                    qrImageView.setImage(image);
+                } catch (Exception e){
+                    Image qrCodeImage = new Image("generatedQRCodes\\qrCode.png");
+                    qrImageView.setImage(qrCodeImage);
+                }
                 return fileToTransfer;
             } else {
                 return null;
@@ -81,14 +90,4 @@ public class MainController {
         }
     }
 
-    private boolean deletePreviouslyMadeQr(){
-        try{
-            File qrFile = new File("src\\generatedQR.png");
-            qrFile.delete();
-            return true;
-        } catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
-    }
 }

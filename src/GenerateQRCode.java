@@ -15,7 +15,7 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 public class GenerateQRCode {
 
-    public static String generateQRCode(File file) throws WriterException, IOException {
+    public synchronized static String generateQRCode(File file) throws WriterException, IOException {
 
         //todo get information from file parsed and create QR text code
         //String qrCodeText = "80.2.250.205-8007-tosend.png-203535";
@@ -23,17 +23,19 @@ public class GenerateQRCode {
         long fileSizeBytes = file.length();
         String qrCodeText = "80.2.250.205-8007-"+filename+"-"+fileSizeBytes;
 
-        int size = 500;
-        String fileType = "png";
-        File qrFile = new File("src\\generatedQRCodes\\"+file.getName());
-        createQRImage(qrFile, qrCodeText, size, fileType);
+
+
         System.out.println("DONE");
 
         return qrCodeText;
     }
 
-    private static void createQRImage(File qrFile, String qrCodeText, int size, String fileType)
+    public synchronized static BufferedImage createQRImage(File qrFile)
             throws WriterException, IOException {
+
+        //QR Code Image properties
+        int size = 500; //size of QR code (pixels)
+        String qrCodeText = generateQRCode(qrFile);
 
         // Create the ByteMatrix for the QR-Code that encodes the given String
         Hashtable<EncodeHintType, ErrorCorrectionLevel> hintMap = new Hashtable<>();
@@ -46,11 +48,12 @@ public class GenerateQRCode {
         BufferedImage image = new BufferedImage(matrixWidth, matrixWidth, BufferedImage.TYPE_INT_RGB);
         image.createGraphics();
 
+        //create the image
         Graphics2D graphics = (Graphics2D) image.getGraphics();
         graphics.setColor(Color.WHITE);
         graphics.fillRect(0, 0, matrixWidth, matrixWidth);
 
-        // Paint and save the image using the ByteMatrix
+        // Paint and save the image
         graphics.setColor(Color.BLACK);
         for (int i = 0; i < matrixWidth; i++) {
             for (int j = 0; j < matrixWidth; j++) {
@@ -59,8 +62,7 @@ public class GenerateQRCode {
                 }
             }
         }
-
-        ImageIO.write(image, fileType, qrFile);
-
+        return image;
     }
+
 }
