@@ -1,5 +1,6 @@
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
@@ -9,84 +10,115 @@ import javafx.stage.Stage;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.net.Socket;
 
 public class MainController {
 
     @FXML
-    private Button transferFileButton;
+    private ImageView qrImageView; //image view which contains the generated QR code
 
     @FXML
-    private ImageView qrImageView;
+    private Button selectFileButton; //Button to select and upload a file
 
     @FXML
-    private Button selectFileButton;
+    private TextArea qrCodeTextArea; //shows what is encoded in the generated QR code
 
-    @FXML
-    private TextArea qrCodeTextArea;
-
-    private File fileToTransfer;
-
+    /**
+     * Initializer for main window
+     */
     public void initialize(){
-        transferFileButton.setText("Transfer file");
-        selectFileButton.setText("Select file :D");
+        selectFileButton.setText("Select file");
+        qrCodeTextArea.setVisible(false);
 
-        selectFileButton.setOnAction(e -> selectFile());
-        transferFileButton.setOnAction(e -> startFileTransfer());
+        try{
+
+        } catch(Exception e){
+
+            //Alert the user that connection to server could not be made
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Could not connect to server");
+            alert.setHeaderText(null);
+            alert.setContentText("Could not establish a connection to server.");
+            alert.showAndWait();
+
+            e.printStackTrace();
+        }
+
+        selectFileButton.setOnAction(e -> uploadFile());
+        //transferFileButton.setOnAction(e -> startFileTransfer());
     }
 
-    private void startFileTransfer(){
+    /**
+     * Method that prompts the user to select a file. A QR code is then generated for the selected file which is then
+     * loaded into the imageView. The file is then parsed to startFileTransfer and loadQrCodeForFile.
+     */
+    private void uploadFile(){
         try{
-            if(fileToTransfer == null){
-                System.out.println("Selected file is null");
-            } else {
-                System.out.println("Starting file transfer process...");
-                FileServerTransfer server = new FileServerTransfer("80.2.250.205",8007, fileToTransfer);
-                server.startServer();
+            //set existing QR code to null
+            qrImageView.setImage(null);
+
+            //set qrCodeTextArea to false
+            qrCodeTextArea.setVisible(false);
+
+            //Create file chooser
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open File To Transfer");
+
+            //file extension filter - jpg, jpeg, png, pdf
+            FileChooser.ExtensionFilter extFilter =
+                    new FileChooser.ExtensionFilter(
+                            "Available Files", "*.jpg", "*.jpeg", "*.png", "*.pdf");
+            fileChooser.getExtensionFilters().add(extFilter);
+
+            //open file chooser
+            File fileToTransfer = fileChooser.showOpenDialog(new Stage());
+
+            if(fileToTransfer != null){
+
+                loadQrCodeForFile(fileToTransfer); //load QR code for image into image view
+                startFileTransfer(fileToTransfer); //upload file to server
+
             }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }//end of selectFile
+
+    /**
+     * Method that creates and runs a serverSocketThread which takes in the socket and the selected file by the user.
+     */
+    private void startFileTransfer(File fileToTransfer){
+        try{
+            //Create and run ServerConnectionThread
+            ServerConnectionThread serverConnectionThread = new ServerConnectionThread(fileToTransfer);
+            serverConnectionThread.run();
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    private File selectFile(){
+    /**
+     * Method that loads the QR code created by the GenerateQRCode class.
+     */
+    private void loadQrCodeForFile(File fileToTransfer){
+        //generated QR code for chosen file
         try{
-            //set existing QR code to null
-            qrImageView.setImage(null);
+            //get text to load into QR code
+            String qrText = GenerateQRCode.generateQRCode(fileToTransfer);
 
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Open File To Transfer");
+            //todo delete this text-view for release
+            qrCodeTextArea.setText(qrText);
+            qrCodeTextArea.setVisible(true);
 
-            //file extension filter - jpg, jpeg, png, pdf
-            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Available Files", "*.jpg", "*.jpeg", "*.png", "*.pdf");
-            fileChooser.getExtensionFilters().add(extFilter);
+            //load QR code as an Image object
+            BufferedImage newQRCode = GenerateQRCode.createQRImage(fileToTransfer);
+            Image image = SwingFXUtils.toFXImage(newQRCode, null);
 
-            File selectedFile = fileChooser.showOpenDialog(new Stage());
-            if(selectedFile != null){
-
-                this.fileToTransfer = selectedFile; //chosen file to transfer
-
-                //generated QR code for chosen file
-                String qrText = GenerateQRCode.generateQRCode(fileToTransfer);
-                qrCodeTextArea.setText(qrText);
-
-
-                //load QR code
-                try{
-                    BufferedImage newQRCode = GenerateQRCode.createQRImage(fileToTransfer);
-                    Image image = SwingFXUtils.toFXImage(newQRCode, null);
-                    qrImageView.setImage(image);
-                } catch (Exception e){
-                    Image qrCodeImage = new Image("generatedQRCodes\\qrCode.png");
-                    qrImageView.setImage(qrCodeImage);
-                }
-                return fileToTransfer;
-            } else {
-                return null;
-            }
+            //set image
+            qrImageView.setImage(image);
         } catch (Exception e){
-            e.printStackTrace();
-            return null;
+            Image qrCodeImage = new Image("generatedQRCodes\\qrCode.png");
+            qrImageView.setImage(qrCodeImage);
         }
     }
 

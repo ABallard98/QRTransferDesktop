@@ -36,10 +36,6 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="transferFileButton" mnemonicParsing="false" prefHeight="56.0" prefWidth="208.0" text="Transfer File">
-                     <font>
-                        <Font size="19.0" />
-                     </font></Button>
                   <TextArea fx:id="qrCodeTextArea" prefHeight="47.0" prefWidth="727.0">
                      <VBox.margin>
                         <Insets top="10.0" />
