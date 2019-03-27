@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.net.Socket;
 
 public class MainController {
 
@@ -49,8 +48,9 @@ public class MainController {
     }
 
     /**
-     * Method that prompts the user to select a file. A QR code is then generated for the selected file which is then
-     * loaded into the imageView. The file is then parsed to startFileTransfer and loadQrCodeForFile.
+     * Method that prompts the user to select a file. Compatible file types are .jpg, .jpeg, .png and .pdf. A QR code
+     * is then generated for the selected file which is then loaded into the imageView. The file is then parsed to
+     * startFileTransfer and loadQrCodeForFile.
      */
     private void uploadFile(){
         try{
@@ -116,6 +116,7 @@ public class MainController {
 
             //set image
             qrImageView.setImage(image);
+
         } catch (Exception e){
             Image qrCodeImage = new Image("generatedQRCodes\\qrCode.png");
             qrImageView.setImage(qrCodeImage);

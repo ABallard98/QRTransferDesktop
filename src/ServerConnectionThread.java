@@ -31,7 +31,14 @@ public class ServerConnectionThread implements Runnable {
         try{//sending instructions to the server
             socket = new Socket(IP_ADDRESS,PORT); //ensure there is a connection to the server
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-            String instructionToSend = "SENDING-"+fileToTransfer.getName().replace("-","")
+
+            String filename = fileToTransfer.getName();
+            filename = filename.replace("-","")
+                    .replace("(","")
+                    .replace(")","")
+                    .replace(" ","");
+
+            String instructionToSend = "SENDING-"+filename
                 +"-"+fileToTransfer.length();
 
             System.out.println(instructionToSend);

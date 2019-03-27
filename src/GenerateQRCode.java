@@ -21,7 +21,15 @@ public class GenerateQRCode {
     public synchronized static String generateQRCode(File file) {
         //todo get information from file parsed and create QR text code
         //String qrCodeText = "80.2.250.205-8007-tosend.png-203535";
-        String filename = file.getName().replace("-","");
+
+        //format file name
+        String filename = file.getName()
+                .replace("-","")
+                .replace("(","")
+                .replace(")","")
+                .replace(" ","");
+
+
         long fileSizeBytes = file.length();
         String qrCodeText = "80.2.250.205-8007-"+filename+"-"+fileSizeBytes;
 
