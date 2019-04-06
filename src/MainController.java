@@ -11,6 +11,9 @@ import javafx.stage.Stage;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+/**
+ * This class implements a controller for the main window of the application
+ */
 public class MainController {
 
     @FXML

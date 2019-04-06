@@ -10,8 +10,13 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
+import javax.imageio.ImageIO;
 
-public class GenerateQRCode {
+/**
+ * This class is used to implement a static class which can generate a string to embed in the QR code and
+ * generate a BufferedImage of a QR Code.
+ */
+public final class GenerateQRCode {
 
     /**
      * Method that generates the string to be encoded in the QR code
@@ -73,6 +78,14 @@ public class GenerateQRCode {
                     }
                 }
             }
+
+//            File outputFile = new File("testImageQrCode.png");
+//            try{
+//                ImageIO.write(image,"png",outputFile);
+//            } catch (Exception e){
+//                e.printStackTrace();
+//            }
+
             return image;
         } catch (WriterException e){
             e.printStackTrace();
