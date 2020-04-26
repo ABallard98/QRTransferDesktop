@@ -2,14 +2,17 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.Socket;
 
 /**
  * This class implements a controller for the main window of the application
@@ -25,6 +28,9 @@ public class MainController {
     @FXML
     private TextArea qrCodeTextArea; //shows what is encoded in the generated QR code
 
+    @FXML
+    private Label serverStatusLabel; //label to display whether server connection is successful
+
     /**
      * Initializer for main window
      */
@@ -33,17 +39,15 @@ public class MainController {
         qrCodeTextArea.setVisible(false);
 
         try{
-
+            Socket testSocket = new Socket("86.157.154.4", 8007);
+            if(testSocket.isConnected()){
+                serverStatusLabel.setText("Server online");
+                serverStatusLabel.setTextFill(Color.web("#32CD32", 0.8));
+            } else {
+                serverStatusLabel.setTextFill(Color.web("FF0000", 0.8));
+            }
         } catch(Exception e){
-
-            //Alert the user that connection to server could not be made
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Could not connect to server");
-            alert.setHeaderText(null);
-            alert.setContentText("Could not establish a connection to server.");
-            alert.showAndWait();
-
-            e.printStackTrace();
+            serverStatusLabel.setTextFill(Color.web("FF0000", 0.8));
         }
 
         selectFileButton.setOnAction(e -> uploadFile());
@@ -70,7 +74,8 @@ public class MainController {
             //file extension filter - jpg, jpeg, png, pdf
             FileChooser.ExtensionFilter extFilter =
                     new FileChooser.ExtensionFilter(
-                            "Available Files", "*.jpg", "*.jpeg", "*.png", "*.pdf");
+                            "Available Files",
+                            "*.jpg", "*.jpeg", "*.png", "*.pdf", "*.mp4", "*.apk");
             fileChooser.getExtensionFilters().add(extFilter);
 
             //open file chooser

@@ -2,7 +2,9 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -11,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="center" hgap="10" style="-fx-background-color: #1E90FF;" vgap="10" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
+<GridPane alignment="center" hgap="10" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #404040;" vgap="10" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainController">
    <columnConstraints>
       <ColumnConstraints />
    </columnConstraints>
@@ -21,8 +23,19 @@
    <children>
       <HBox prefHeight="700.0" prefWidth="1200.0">
          <children>
-            <VBox prefHeight="700.0" prefWidth="268.0" />
-            <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="948.0">
+            <VBox prefHeight="600.0" prefWidth="287.0" style="-fx-back: BLACK;">
+               <children>
+                  <Label prefHeight="74.0" prefWidth="171.0" text="QR Transfer" textFill="WHITE">
+                     <font>
+                        <Font size="32.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="serverStatusLabel" prefHeight="25.0" prefWidth="171.0" text="Server Offline" textFill="WHITE" />
+               </children>
+               <effect>
+                  <DropShadow />
+               </effect></VBox>
+            <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="606.0">
                <children>
                   <ImageView fx:id="qrImageView" fitHeight="316.0" fitWidth="340.0" pickOnBounds="true" preserveRatio="true">
                      <VBox.margin>

@@ -36,7 +36,7 @@ public final class GenerateQRCode {
 
 
         long fileSizeBytes = file.length();
-        String qrCodeText = "80.2.250.205-8007-"+filename+"-"+fileSizeBytes;
+        String qrCodeText = "86.157.154.4-8007-"+filename+"-"+fileSizeBytes;
 
         return qrCodeText;
     }

@@ -8,7 +8,7 @@ public class ServerConnectionThread extends Thread {
 
     private File fileToTransfer; //file to transfer
     private Socket socket; //socket
-    private static final String IP_ADDRESS = "80.2.250.205"; //ip address of server
+    private static final String IP_ADDRESS = "86.157.154.4"; //ip address of server
     private static final int PORT = 8007; //port to connect to
 
     /**
