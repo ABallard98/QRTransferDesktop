@@ -8,8 +8,8 @@ public class ServerConnectionThread extends Thread {
 
     private File fileToTransfer; //file to transfer
     private Socket socket; //socket
-    private static final String IP_ADDRESS = "86.157.154.4"; //ip address of server
-    private static final int PORT = 8007; //port to connect to
+    //private static final String IP_ADDRESS = "86.157.154.80"; //ip address of server
+    //private static final int PORT = 8007; //port to connect to
 
     /**
      * Constructor for ServerConnectionThread
@@ -18,6 +18,11 @@ public class ServerConnectionThread extends Thread {
     public ServerConnectionThread(File fileToTransfer){
         this.fileToTransfer = fileToTransfer;
         try {
+
+            final String IP_ADDRESS = ServerIpReader.getIpAddress();
+            final int PORT = ServerIpReader.getPort();
+
+
             this.socket = new Socket(IP_ADDRESS,PORT);
         } catch (IOException e) {
             e.printStackTrace();
@@ -42,6 +47,9 @@ public class ServerConnectionThread extends Thread {
     private synchronized void transferFile (File fileToTransfer){
         byte[] byteArray = new byte[(int) fileToTransfer.length()]; //array for bytes of file
         System.out.println("Attempting to send file to server...");
+
+        final String IP_ADDRESS = ServerIpReader.getIpAddress();
+        final int PORT = ServerIpReader.getPort();
 
         try{
             socket = new Socket(IP_ADDRESS,PORT); //ensure there is a connection to the server

@@ -24,8 +24,6 @@ public final class GenerateQRCode {
      * @return String to be encoded in the QR code
      */
     public synchronized static String generateQRCode(File file) {
-        //todo get information from file parsed and create QR text code
-        //String qrCodeText = "80.2.250.205-8007-tosend.png-203535";
 
         //format file name
         String filename = file.getName()
@@ -34,9 +32,13 @@ public final class GenerateQRCode {
                 .replace(")","")
                 .replace(" ","");
 
-
+        //get time
+        long dateTime = System.currentTimeMillis();
+        //get file length
         long fileSizeBytes = file.length();
-        String qrCodeText = "86.157.154.4-8007-"+filename+"-"+fileSizeBytes;
+
+        //create text for qr code
+        String qrCodeText = "86.157.154.4-8007-"+dateTime+"-"+filename+"-"+fileSizeBytes;
 
         return qrCodeText;
     }

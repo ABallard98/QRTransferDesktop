@@ -38,8 +38,12 @@ public class MainController {
         selectFileButton.setText("Select file");
         qrCodeTextArea.setVisible(false);
 
+        //get IP address from file
+        String ipAddress = ServerIpReader.getIpAddress();
+        int port = ServerIpReader.getPort();
+
         try{
-            Socket testSocket = new Socket("86.157.154.4", 8007);
+            Socket testSocket = new Socket(ipAddress, port);
             if(testSocket.isConnected()){
                 serverStatusLabel.setText("Server online");
                 serverStatusLabel.setTextFill(Color.web("#32CD32", 0.8));
