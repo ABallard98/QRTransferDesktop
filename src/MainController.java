@@ -39,11 +39,11 @@ public class MainController {
         qrCodeTextArea.setVisible(false);
 
         //get IP address from file
-        String ipAddress = ServerIpReader.getIpAddress();
-        int port = ServerIpReader.getPort();
+        final String IP_ADDRESS = ServerIpReader.getIpAddress();
+        final int PORT = ServerIpReader.getPort();
 
         try{
-            Socket testSocket = new Socket(ipAddress, port);
+            Socket testSocket = new Socket(IP_ADDRESS, PORT);
             if(testSocket.isConnected()){
                 serverStatusLabel.setText("Server online");
                 serverStatusLabel.setTextFill(Color.web("#32CD32", 0.8));

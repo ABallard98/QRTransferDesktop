@@ -8,8 +8,6 @@ public class ServerConnectionThread extends Thread {
 
     private File fileToTransfer; //file to transfer
     private Socket socket; //socket
-    //private static final String IP_ADDRESS = "86.157.154.80"; //ip address of server
-    //private static final int PORT = 8007; //port to connect to
 
     /**
      * Constructor for ServerConnectionThread
@@ -21,7 +19,6 @@ public class ServerConnectionThread extends Thread {
 
             final String IP_ADDRESS = ServerIpReader.getIpAddress();
             final int PORT = ServerIpReader.getPort();
-
 
             this.socket = new Socket(IP_ADDRESS,PORT);
         } catch (IOException e) {
@@ -41,11 +38,14 @@ public class ServerConnectionThread extends Thread {
     }
 
     /**
-     *
-     * @param fileToTransfer
+     * Method to send file to server. File is sent by being broken down into bytes, and these bytes are sent
+     * to the server, for it to be re-built.
+     * @param fileToTransfer - file to be sent
      */
     private synchronized void transferFile (File fileToTransfer){
+
         byte[] byteArray = new byte[(int) fileToTransfer.length()]; //array for bytes of file
+
         System.out.println("Attempting to send file to server...");
 
         final String IP_ADDRESS = ServerIpReader.getIpAddress();
@@ -56,16 +56,17 @@ public class ServerConnectionThread extends Thread {
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
 
             String filename = fileToTransfer.getName();
+
             //formatting filename
             filename = filename.replace("-","")
                     .replace("(","")
                     .replace(")","")
                     .replace(" ","");
 
+            //instructions to be sent to the server
             String instructionToSend = "SENDING-"+filename
                 +"-"+fileToTransfer.length();
-
-            //System.out.println(instructionToSend);
+            
             dos.writeUTF(instructionToSend); //sending instructions to the server
 
             InputStream in = new FileInputStream(fileToTransfer);

@@ -1,8 +1,16 @@
 import java.io.File;
 import java.util.Scanner;
 
+/**
+ * This class is used to collect data from the "ServerIp.txt" file which contains the
+ * server's IP address and port for the socket to connect to.
+ */
 public class ServerIpReader {
 
+    /**
+     * Method to collect IP address provided from text file
+     * @return String - IP address
+     */
     public static String getIpAddress(){
         String toReturn = "";
         try{
@@ -17,6 +25,10 @@ public class ServerIpReader {
         return toReturn;
     }
 
+    /**
+     * Method to collect port provided from text file
+     * @return int - Port
+     */
     public static int getPort(){
         int toReturn = 0;
         try{
