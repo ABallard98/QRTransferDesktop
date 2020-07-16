@@ -9,6 +9,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.sun.security.ntlm.Server;
 
 import javax.imageio.ImageIO;
 
@@ -38,7 +39,9 @@ public final class GenerateQRCode {
         long fileSizeBytes = file.length();
 
         //create text for qr code
-        String qrCodeText = "86.157.154.4-8007-"+dateTime+"-"+filename+"-"+fileSizeBytes;
+        String ipAddress = ServerIpReader.getIpAddress();
+        String port = ServerIpReader.getPort()+"";
+        String qrCodeText = ipAddress+"-"+port+"-"+dateTime+"-"+filename+"-"+fileSizeBytes;
 
         return qrCodeText;
     }

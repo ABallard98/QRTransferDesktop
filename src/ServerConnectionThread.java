@@ -66,7 +66,7 @@ public class ServerConnectionThread extends Thread {
             //instructions to be sent to the server
             String instructionToSend = "SENDING-"+filename
                 +"-"+fileToTransfer.length();
-            
+
             dos.writeUTF(instructionToSend); //sending instructions to the server
 
             InputStream in = new FileInputStream(fileToTransfer);
