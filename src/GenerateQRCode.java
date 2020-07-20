@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.util.*;
 import com.google.zxing.BarcodeFormat;
@@ -44,6 +45,44 @@ public final class GenerateQRCode {
         String qrCodeText = ipAddress+"-"+port+"-"+dateTime+"-"+filename+"-"+fileSizeBytes;
 
         return qrCodeText;
+    }
+
+    public synchronized static BufferedImage createQRImageForDownload(String qrCodeText){
+
+        // Create the ByteMatrix for the QR-Code that encodes the given String
+        Hashtable<EncodeHintType, ErrorCorrectionLevel> hintMap = new Hashtable<>();
+        hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+
+        try {
+            int size = 500; //size of QR code in pixels
+            BitMatrix bitMatrix = qrCodeWriter.encode(qrCodeText, BarcodeFormat.QR_CODE, size, size, hintMap);
+            // Make the BufferedImage that are to hold the QRCode
+            int matrixWidth = bitMatrix.getWidth();
+            BufferedImage image = new BufferedImage(matrixWidth, matrixWidth, BufferedImage.TYPE_INT_RGB);
+            image.createGraphics();
+
+            //create the image
+            Graphics2D graphics = (Graphics2D) image.getGraphics();
+            graphics.setColor(Color.WHITE);
+            graphics.fillRect(0, 0, matrixWidth, matrixWidth);
+
+            // Paint and save the image
+            graphics.setColor(Color.BLACK);
+            for (int i = 0; i < matrixWidth; i++) {
+                for (int j = 0; j < matrixWidth; j++) {
+                    if (bitMatrix.get(i, j)) {
+                        graphics.fillRect(i, j, 1, 1);
+                    }
+                }
+            }
+
+            return image;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**

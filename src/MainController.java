@@ -26,6 +26,9 @@ public class MainController {
     private Button selectFileButton; //Button to select and upload a file
 
     @FXML
+    private Button downloadFileButton; //Button to create QR code for file download
+
+    @FXML
     private TextArea qrCodeTextArea; //shows what is encoded in the generated QR code
 
     @FXML
@@ -35,7 +38,10 @@ public class MainController {
      * Initializer for main window
      */
     public void initialize(){
+
+        //initialise window
         selectFileButton.setText("Select file");
+        downloadFileButton.setText("Download File");
         qrCodeTextArea.setVisible(false);
 
         //get IP address from file
@@ -55,6 +61,7 @@ public class MainController {
         }
 
         selectFileButton.setOnAction(e -> uploadFile());
+        downloadFileButton.setOnAction(e -> generateQRCodeForDownload());
         //transferFileButton.setOnAction(e -> startFileTransfer());
     }
 
@@ -118,7 +125,6 @@ public class MainController {
             //get text to load into QR code
             String qrText = GenerateQRCode.generateQRCode(fileToTransfer);
 
-            //todo delete this text-view for release
             qrCodeTextArea.setText(qrText);
             qrCodeTextArea.setVisible(true);
 
@@ -133,6 +139,25 @@ public class MainController {
             Image qrCodeImage = new Image("generatedQRCodes\\qrCode.png");
             qrImageView.setImage(qrCodeImage);
         }
+    }
+
+    private void generateQRCodeForDownload(){
+        try{
+            String qrCodeText = "DOWNLOAD-"+System.currentTimeMillis();
+
+            qrCodeTextArea.setText(qrCodeText);
+            qrCodeTextArea.setVisible(true);
+
+            //generate and load QR code
+            BufferedImage downloadQRCode = GenerateQRCode.createQRImageForDownload(qrCodeText);
+            Image image = SwingFXUtils.toFXImage(downloadQRCode, null);
+
+            //set image view
+            qrImageView.setImage(image);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
 }
