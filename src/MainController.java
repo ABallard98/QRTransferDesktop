@@ -1,6 +1,5 @@
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -44,14 +43,15 @@ public class MainController {
         downloadFileButton.setText("Download File");
         qrCodeTextArea.setVisible(false);
 
-        //get IP address from file
+        //get IP address and port from file
         final String IP_ADDRESS = ServerIpReader.getIpAddress();
         final int PORT = ServerIpReader.getPort();
 
         try{
             Socket testSocket = new Socket(IP_ADDRESS, PORT);
+            //see if socket connection works
             if(testSocket.isConnected()){
-                serverStatusLabel.setText("Server online");
+                serverStatusLabel.setText("Server online"); //set server status
                 serverStatusLabel.setTextFill(Color.web("#32CD32", 0.8));
             } else {
                 serverStatusLabel.setTextFill(Color.web("FF0000", 0.8));
@@ -60,9 +60,10 @@ public class MainController {
             serverStatusLabel.setTextFill(Color.web("FF0000", 0.8));
         }
 
+        //set OnClick methods for buttons
         selectFileButton.setOnAction(e -> uploadFile());
         downloadFileButton.setOnAction(e -> generateQRCodeForDownload());
-        //transferFileButton.setOnAction(e -> startFileTransfer());
+
     }
 
     /**
@@ -92,16 +93,15 @@ public class MainController {
             //open file chooser
             File fileToTransfer = fileChooser.showOpenDialog(new Stage());
 
-            if(fileToTransfer != null){
-
+            if(fileToTransfer != null){ //if user has selected a file
                 loadQrCodeForFile(fileToTransfer); //load QR code for image into image view
                 startFileTransfer(fileToTransfer); //upload file to server
-
             }
+
         } catch (Exception e){
             e.printStackTrace();
         }
-    }//end of selectFile
+    }
 
     /**
      * Method that creates and runs a serverSocketThread which takes in the socket and the selected file by the user.
@@ -141,8 +141,13 @@ public class MainController {
         }
     }
 
+    /**
+     * Method to triggers on downloadFileButton on-click. This method
+     * generates a QR code to download a file from mobile to this desktop.
+     */
     private void generateQRCodeForDownload(){
         try{
+            //String to be embedded in QR code
             String qrCodeText = "DOWNLOAD-"+System.currentTimeMillis();
 
             qrCodeTextArea.setText(qrCodeText);

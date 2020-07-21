@@ -47,6 +47,12 @@ public final class GenerateQRCode {
         return qrCodeText;
     }
 
+
+    /**
+     * Method to generate QR code for mobile -> desktop transfers
+     * @param qrCodeText - text to encode in QR code
+     * @return BufferedImage - QR Code
+     */
     public synchronized static BufferedImage createQRImageForDownload(String qrCodeText){
 
         // Create the ByteMatrix for the QR-Code that encodes the given String
@@ -122,13 +128,6 @@ public final class GenerateQRCode {
                     }
                 }
             }
-
-//            File outputFile = new File("testImageQrCode.png");
-//            try{
-//                ImageIO.write(image,"png",outputFile);
-//            } catch (Exception e){
-//                e.printStackTrace();
-//            }
 
             return image;
         } catch (WriterException e){
