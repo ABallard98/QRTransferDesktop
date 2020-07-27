@@ -43,7 +43,7 @@ public class FileDownloadThread extends Thread {
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
 
             //todo change this
-            //dos.writeUTF("DOWNLOAD-"+filename+"-"+byteSize);
+            //dos.writeUTF("WAIT_FOR_DOWNLOAD-"+filename+"-"+byteSize);
 
             //input stream to receive file information and bytes
             //todo have the server sending the meta-data of the file before the bytes of file
@@ -75,6 +75,7 @@ public class FileDownloadThread extends Thread {
         } catch(Exception e){
             e.printStackTrace();
         }
-
     }
+
+
 }

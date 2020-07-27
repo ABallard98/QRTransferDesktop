@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.Socket;
+import java.util.Random;
 
 /**
  * This class implements a controller for the main window of the application
@@ -148,7 +149,7 @@ public class MainController {
     private void generateQRCodeForDownload(){
         try{
             //String to be embedded in QR code
-            String qrCodeText = "DOWNLOAD-"+System.currentTimeMillis();
+            String qrCodeText = "DOWNLOAD-"+makeRandomCharIdentifier(8);
 
             qrCodeTextArea.setText(qrCodeText);
             qrCodeTextArea.setVisible(true);
@@ -162,7 +163,23 @@ public class MainController {
         } catch (Exception e){
             e.printStackTrace();
         }
-
     }
+
+    /**
+     * Method to generate a random string of chars of n length that as an identifier
+     * for the PC waiting to download a file
+     * @param numOfChars - length of string generated
+     * @return - String of n length consisting of random chars
+     */
+    private String makeRandomCharIdentifier(int numOfChars){
+        String s = "";
+        Random rng = new Random();
+        for(int i = 0; i < numOfChars; i++){
+            s += (char) ('a' + rng.nextInt(26));
+        }
+        return s;
+    }
+
+
 
 }
